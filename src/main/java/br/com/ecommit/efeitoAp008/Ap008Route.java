@@ -29,10 +29,13 @@ public class Ap008Route {
         context.addRoutes(new RouteBuilder() {
             public void configure() {
                 try {
-                    from("file:input/?fileName=AP008.csv/?noop=true").
-                        unmarshal().csv()
-                        .process(ap008Processor)
-                    .to("file:output?fileName=AP008a.csv");
+                    CsvDataFormat csvDataFormat = new CsvDataFormat();
+                    csvDataFormat.setDelimiter(";");
+
+                    from("file:input//?fileName=CERC-AP008_27547510_20210603.csv&noop=true").
+                            unmarshal().csv()
+                            .process(ap008Processor)
+                    .to("file:output?fileName=AP008_03_final.csv");
 
 /*
 

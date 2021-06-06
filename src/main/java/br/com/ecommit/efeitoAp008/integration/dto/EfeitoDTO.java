@@ -75,7 +75,7 @@ public class EfeitoDTO implements Serializable {
             //Regras de divisão
             efeito.setRegraDivisao(Integer.parseInt(de[5]));
             //Valor comprometido
-            efeito.setValorComprometido(BigDecimal.valueOf(Long.parseLong(de[6])));
+            efeito.setValorComprometido(BigDecimal.valueOf(Double.parseDouble(de[6])));
             //Número documento titular domicílio
             efeito.setDocumentoTitularDomicilio(de[7]);
             //Tipo cnta
