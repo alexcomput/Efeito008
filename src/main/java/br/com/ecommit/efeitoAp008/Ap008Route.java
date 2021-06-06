@@ -13,9 +13,11 @@ import org.apache.camel.dataformat.bindy.csv.BindyCsvDataFormat;
 import org.apache.camel.model.dataformat.BindyType;
 import org.apache.camel.model.dataformat.CsvDataFormat;
 import org.apache.camel.spi.DataFormat;
+import org.apache.camel.spi.ShutdownStrategy;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +29,11 @@ public class Ap008Route {
 
     public void addRoutesToCamelContext(CamelContext context) throws Exception {
         context.setStreamCaching(true);
-
+        ShutdownStrategy shutdownStrategy = context.getShutdownStrategy();
+        shutdownStrategy.setTimeUnit(TimeUnit.HOURS);
+        shutdownStrategy.setTimeout(1);
+        shutdownStrategy.setShutdownNowOnTimeout(true);
+        context.setShutdownStrategy(shutdownStrategy);
         context.addRoutes(new RouteBuilder() {
             public void configure() {
                 try {
