@@ -10,6 +10,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.dataformat.bindy.csv.BindyCsvDataFormat;
+import org.apache.camel.model.dataformat.BindyType;
 import org.apache.camel.model.dataformat.CsvDataFormat;
 import org.apache.camel.spi.DataFormat;
 import org.springframework.stereotype.Component;
@@ -25,17 +26,20 @@ public class Ap008Route {
     private final Ap008Processor ap008Processor;
 
     public void addRoutesToCamelContext(CamelContext context) throws Exception {
+        context.setStreamCaching(true);
 
         context.addRoutes(new RouteBuilder() {
             public void configure() {
                 try {
-                    CsvDataFormat csvDataFormat = new CsvDataFormat();
-                    csvDataFormat.setDelimiter(";");
 
-                    from("file:input//?fileName=CERC-AP008_27547510_20210603.csv&noop=true").
-                            unmarshal().csv()
+                    CsvDataFormat csv = new CsvDataFormat();
+                     csv.setHeaderDisabled("true");
+                     csv.setDelimiter(";");
+
+                    from("file:input//?fileName=CERC-AP008_27547510_20210601.csv&noop=true&delay=10000").
+                            unmarshal(csv).split(body()).streaming()
                             .process(ap008Processor)
-                    .to("file:output?fileName=AP008_03_final.csv");
+                    .to("file:output?fileName=AP008_01_final.csv");
 
 /*
 
